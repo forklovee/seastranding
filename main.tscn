@@ -1,0 +1,108 @@
+[gd_scene load_steps=15 format=3 uid="uid://cdgvkexu5dvhc"]
+
+[ext_resource type="Script" path="res://World/Sea/WaterSurface/water_surface.gd" id="1"]
+[ext_resource type="Script" path="res://main.gd" id="1_mjel5"]
+[ext_resource type="Shader" path="res://World/Sea/WaterSurface/water_simulation.gdshader" id="2_dl3bg"]
+[ext_resource type="Shader" uid="uid://bloq1b2jpy07y" path="res://World/Sea/WaterSurface/water_surface.tres" id="2_wm31m"]
+[ext_resource type="PackedScene" uid="uid://bucyia68wxxxq" path="res://Vehicles/Boat/boat.tscn" id="4_kghp0"]
+
+[sub_resource type="PlaneMesh" id="1"]
+size = Vector2(10, 10)
+subdivide_width = 5
+subdivide_depth = 5
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_gkbf0"]
+viewport_path = NodePath("water_surface/SimulationTexture")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ri4k"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_wm31m")
+shader_parameter/simulation_texture = SubResource("ViewportTexture_gkbf0")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_udutq"]
+viewport_path = NodePath("water_surface/WaterCollision")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_jawrp"]
+viewport_path = NodePath("water_surface/SimulationTexture")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_le6td"]
+resource_local_to_scene = true
+shader = ExtResource("2_dl3bg")
+shader_parameter/phase = 0.2
+shader_parameter/attenuation = 0.999
+shader_parameter/deltaUV = 3.0
+shader_parameter/sim_texture = SubResource("ViewportTexture_jawrp")
+shader_parameter/collision_texture = SubResource("ViewportTexture_udutq")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1jupj"]
+
+[sub_resource type="Sky" id="Sky_icg0p"]
+sky_material = SubResource("ProceduralSkyMaterial_1jupj")
+
+[sub_resource type="Environment" id="Environment_lcqyd"]
+background_mode = 2
+sky = SubResource("Sky_icg0p")
+
+[node name="main" type="Node3D" node_paths=PackedStringArray("player_spawn_point")]
+script = ExtResource("1_mjel5")
+player_spawn_point = NodePath("Boat/PlayerStart")
+
+[node name="water_surface" type="MeshInstance3D" parent="."]
+mesh = SubResource("1")
+surface_material_override/0 = SubResource("ShaderMaterial_3ri4k")
+script = ExtResource("1")
+
+[node name="WaterCollision" type="SubViewport" parent="water_surface"]
+transparent_bg = true
+size = Vector2i(128, 128)
+
+[node name="Camera3D" type="Camera3D" parent="water_surface/WaterCollision"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -10, 0)
+cull_mask = 524288
+projection = 1
+size = 10.0
+
+[node name="SimulationTexture" type="SubViewport" parent="water_surface"]
+size = Vector2i(128, 128)
+render_target_clear_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="water_surface/SimulationTexture"]
+material = SubResource("ShaderMaterial_le6td")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Boat" parent="." instance=ExtResource("4_kghp0")]
+dir = Vector3(0, 0, 0)
+
+[node name="PlayerStart" type="Marker3D" parent="Boat" groups=["PlayerSpawnPoint"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.256133, 0)
+
+[node name="Boat2" parent="." instance=ExtResource("4_kghp0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1313, 0, 0)
+dir = Vector3(0, 0, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.736794, 0.676118, 0, -0.676118, 0.736794, 0, 0, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lcqyd")
+
+[node name="Island" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -70.727)
+use_collision = true
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Island"]
+transform = Transform3D(1, 0, 0, 0, 0.191, 0, 0, 0, 1, 0, 0, 0)
+radius = 30.0
+radial_segments = 30
+rings = 15
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Island"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7.84614, 0)
+radius = 29.7
+height = 15.0
+sides = 30

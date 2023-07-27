@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://by3i14315ycoj"]
+
+[ext_resource type="Script" path="res://Entity/Npc/Npc.gd" id="1_b71il"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_qvd8j"]
+radius = 0.25
+radial_segments = 16
+rings = 2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lckix"]
+radius = 0.25
+
+[node name="Npc" type="CharacterBody3D"]
+script = ExtResource("1_b71il")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_qvd8j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_lckix")
+disabled = true
+
+[node name="CameraTarget" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 3.24, 4.271)

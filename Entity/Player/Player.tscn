@@ -1,0 +1,195 @@
+[gd_scene load_steps=6 format=3 uid="uid://dwim0bu50s70f"]
+
+[ext_resource type="Script" path="res://Entity/Player/Player.gd" id="1_4mb82"]
+[ext_resource type="Script" path="res://UI/Components/TabletTime.gd" id="2_60ml1"]
+[ext_resource type="Texture2D" uid="uid://ddoiq4cdoc377" path="res://icon.png" id="3_r5d8n"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_qvd8j"]
+radius = 0.25
+radial_segments = 16
+rings = 2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lckix"]
+radius = 0.25
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_4mb82")
+gimbal_x_axis_lock = Vector2(-45, 20)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_qvd8j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_lckix")
+disabled = true
+
+[node name="Gimbal" type="Node3D" parent="."]
+
+[node name="CameraTarget" type="Marker3D" parent="Gimbal"]
+transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 3.24, 4.271)
+
+[node name="Tablet" type="Control" parent="Gimbal"]
+visible = false
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -310.0
+offset_top = -210.0
+offset_right = 310.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(310, 210)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="bg" type="Panel" parent="Gimbal/Tablet"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Gimbal/Tablet"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NotificationBar" type="HBoxContainer" parent="Gimbal/Tablet/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Time" type="Label" parent="Gimbal/Tablet/VBoxContainer/NotificationBar"]
+layout_mode = 2
+text = "21:37"
+script = ExtResource("2_60ml1")
+
+[node name="ControlBar" type="HBoxContainer" parent="Gimbal/Tablet/VBoxContainer"]
+layout_direction = 1
+layout_mode = 2
+alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="Gimbal/Tablet/VBoxContainer/ControlBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Back" type="Button" parent="Gimbal/Tablet/VBoxContainer/ControlBar/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "<- Back"
+
+[node name="Label" type="Label" parent="Gimbal/Tablet/VBoxContainer/ControlBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Screen Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="Gimbal/Tablet/VBoxContainer/ControlBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Screens" type="TabContainer" parent="Gimbal/Tablet/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AppGrid" type="CenterContainer" parent="Gimbal/Tablet/VBoxContainer/Screens"]
+layout_mode = 2
+
+[node name="AppGrid" type="GridContainer" parent="Gimbal/Tablet/VBoxContainer/Screens/AppGrid"]
+custom_minimum_size = Vector2(376, 224)
+layout_mode = 2
+columns = 5
+
+[node name="Jobs" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/AppGrid/AppGrid"]
+layout_mode = 2
+icon = ExtResource("3_r5d8n")
+
+[node name="Settings" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/AppGrid/AppGrid"]
+layout_mode = 2
+icon = ExtResource("3_r5d8n")
+
+[node name="Jobs" type="CenterContainer" parent="Gimbal/Tablet/VBoxContainer/Screens"]
+visible = false
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs"]
+custom_minimum_size = Vector2(450, 280)
+layout_mode = 2
+split_offset = 43
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 3
+
+[node name="JobList" type="VBoxContainer" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button2" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button3" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button4" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button5" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button6" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button7" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button8" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button9" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button10" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="Button11" type="Button" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/ScrollContainer/JobList"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+text = "Obciąganie chuja za kawał sznura"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Title2" type="Label" parent="Gimbal/Tablet/VBoxContainer/Screens/Jobs/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Obciągnij chuja za kawał sznura. Zgłoś się za garażami."
+autowrap_mode = 3
