@@ -26,7 +26,7 @@ void fragment() {
 	
 	vec2 collision_uv = vec2(UV.x, 1.0 - UV.y);
 	float collision = texture(collision_texture, collision_uv).r;
-	float prevCollision = texture(sim_texture, UV).r;
+	float prevCollision = texture(sim_texture, UV).b;
 	
 	if (collision > 0.0 && prevCollision == 0.0){
 		p += collision * .5;

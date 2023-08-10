@@ -2,7 +2,7 @@ extends Vehicle
 
 class_name Boat
 
-@onready var water_surface: WaterSurface = get_parent().get_node("water_surface") if get_parent().has_node("water_surface") else null
+@onready var water_surface: SeaSurface = get_parent().get_node("sea_surface") if get_parent().has_node("sea_surface") else null
 @onready var engine_foam_particles: GPUParticles3D = get_node("engine_foam") if has_node("engine_foam") else null
 
 func _physics_process(delta):
@@ -18,8 +18,5 @@ func _physics_process(delta):
 	velocity.x = move_toward(velocity.x, movement_velocity.x, delta*2.0)
 	velocity.y = (floating_height-global_position.y) * 20.0
 	velocity.z = move_toward(velocity.z, movement_velocity.z, delta*2.0) 
-	
-	if engine_foam_particles != null:
-		engine_foam_particles.emitting = dir.z != 0.0
 	
 	move_and_slide()

@@ -1,13 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://bucyia68wxxxq"]
+[gd_scene load_steps=7 format=3 uid="uid://bucyia68wxxxq"]
 
 [ext_resource type="Script" path="res://Vehicles/Boat/Boat.gd" id="1_y12j0"]
 
 [sub_resource type="BoxMesh" id="4"]
 size = Vector3(0.5, 0.5, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nqeda"]
-shading_mode = 0
-albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0opee"]
 size = Vector3(0.5, 0.5, 1)
@@ -46,12 +42,6 @@ dir = Vector3(0, 0, 1)
 
 [node name="mesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("4")
-
-[node name="mesh2" type="MeshInstance3D" parent="mesh"]
-layers = 524288
-material_override = SubResource("StandardMaterial3D_nqeda")
-mesh = SubResource("4")
-skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_0opee")

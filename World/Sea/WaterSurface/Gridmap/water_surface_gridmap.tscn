@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://dmtt3onqp63hg"]
+
+[ext_resource type="Material" uid="uid://d2o734ymrt3c2" path="res://World/Sea/WaterSurface/MainWater.material" id="1_op0c0"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lfmwy"]
+size = Vector2(250, 250)
+subdivide_width = 85
+subdivide_depth = 85
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_40msi"]
+size = Vector2(250, 250)
+subdivide_width = 35
+subdivide_depth = 35
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_eyllr"]
+size = Vector2(250, 250)
+subdivide_width = 15
+subdivide_depth = 15
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_r7y4g"]
+size = Vector2(250, 250)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o4lgo"]
+albedo_color = Color(0.145098, 0.498039, 0.560784, 1)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="HighPoly" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_lfmwy")
+surface_material_override/0 = ExtResource("1_op0c0")
+
+[node name="MedPoly" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_40msi")
+surface_material_override/0 = ExtResource("1_op0c0")
+
+[node name="LowMediumPoly" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_eyllr")
+surface_material_override/0 = ExtResource("1_op0c0")
+
+[node name="LowPoly" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_r7y4g")
+surface_material_override/0 = SubResource("StandardMaterial3D_o4lgo")

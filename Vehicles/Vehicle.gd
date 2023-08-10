@@ -21,3 +21,7 @@ func _physics_process(delta):
 	if is_processing_input():
 		var input_dir = Input.get_vector("left", "right", "forward", "backward")
 		dir = Vector3(input_dir.x, 0, input_dir.y)
+
+func enter(entity: Entity):
+	entity_inside = entity
+	entity.in_vehicle = self

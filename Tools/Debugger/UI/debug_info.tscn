@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://c7vy1w41w6e5"]
+
+[ext_resource type="Script" path="res://Tools/Debugger/FPS_Counter.gd" id="1_akte4"]
+[ext_resource type="Script" path="res://Tools/Debugger/Player_Position_DebugInfo.gd" id="2_wvng3"]
+[ext_resource type="Script" path="res://Tools/Debugger/Sea_Surface.gd" id="3_fp7tj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_7loxo"]
+font_size = 13
+
+[node name="DebugInfo" type="CanvasLayer"]
+
+[node name="Info" type="VBoxContainer" parent="."]
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 520.0
+grow_vertical = 2
+theme_override_constants/separation = -1
+
+[node name="FPS" type="Label" parent="Info"]
+layout_mode = 2
+script = ExtResource("1_akte4")
+
+[node name="playerpos" type="Label" parent="Info"]
+layout_mode = 2
+script = ExtResource("2_wvng3")
+
+[node name="sea_surface" type="Label" parent="Info"]
+visible = false
+layout_mode = 2
+script = ExtResource("3_fp7tj")
+
+[node name="Info3" type="Label" parent="."]
+visible = false
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -229.0
+offset_bottom = 126.0
+grow_horizontal = 0
+text = "\"Sea stranding\"
+alt+enter - toggle fullscreen
+f1 - normal view
+f2 - wireframe view"
+label_settings = SubResource("LabelSettings_7loxo")
+horizontal_alignment = 2

@@ -2,41 +2,27 @@ extends Entity
 
 class_name Player
 
-@onready var _gimbal: Node3D = get_node("Gimbal")
+@onready var _gimbal: CameraGimbal = get_node("Gimbal")
 @onready var _camera_target: Marker3D = _gimbal.get_node("CameraTarget")
+@onready var _animations: AnimationTree = get_node("anim")
 
-@export_category("Camera Gimbal")
-@export var gimbal_x_axis_lock = Vector2(-90.0, 90.0)
-
-@export_category("Input")
+@export_category("Input Processing")
 @export var process_movement_input = true
-@export var process_camera_input = true
 @export var process_interaction_input = true
 
-const SPEED = 5.0
-const JUMP_VELOCITY = 4.5
-
-var in_vehicle: Vehicle = null:
-	set (value):
-		process_movement_input = value == null
-		in_vehicle = value
-	get:
-		return in_vehicle
-
-var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-
-func _input(event):
-	if event is InputEventMouseMotion and process_camera_input:
-		var relative = event.relative * .25
-		
-		_gimbal.rotation_degrees.y -= relative.x
-		_gimbal.rotation_degrees.x = clamp( _gimbal.rotation_degrees.x + relative.y, gimbal_x_axis_lock.x, gimbal_x_axis_lock.y )
 
 func _physics_process(delta):
-	if not is_on_floor() and in_vehicle == null:
-		velocity.y -= gravity * delta
+	super(delta)
+	
+	$mesh.visible = !_gimbal.get_current_camera_setup().hide_target_mesh
+	
+	rotation_degrees.y = _gimbal.rotation_degrees.y
+	
+	process_movement_input = in_vehicle == null
+	
+	
 
-	if process_movement_input:
+	if process_movement_input and Input != null:
 		if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 			velocity.y = JUMP_VELOCITY
 
@@ -50,6 +36,8 @@ func _physics_process(delta):
 			velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+	
+	_animations.set("parameters/movement/blend_position", Vector2(velocity.x, velocity.z).length())
 
 func can_move():
 	return in_vehicle == null

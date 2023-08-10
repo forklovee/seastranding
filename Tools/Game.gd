@@ -41,6 +41,7 @@ class HumanTime:
 @onready var main_scene = get_node("/root/main") if has_node("/root/main") else null
 
 var player: Player = null
+var sea_surface: SeaSurface = null
 
 var game_time = HumanTime.new(0)
 var elapsed_time = 0.0
@@ -54,12 +55,15 @@ func start_gameplay(player_spawn_point: Marker3D) -> bool:
 		player_spawn_target = player_spawn_point
 	
 	player = player_res.instantiate()
-	player_spawn_target.add_child(player)
-	player.position = Vector3.ZERO
-	
 	if player_spawn_target.get_parent() is Vehicle:
 		player.in_vehicle = player_spawn_target.get_parent()
 		player.in_vehicle.entity_inside = player
+	
+	player_spawn_target.add_child(player)
+	player.global_transform = player_spawn_target.global_transform
+	player.hide()
+	
+	sea_surface = main_scene.get_node("sea_surface")
 	
 	return true
 	

@@ -1,9 +1,12 @@
 shader_type spatial;
-//render_mode diffuse_toon, specular_toon, blend_mix;
+render_mode diffuse_lambert, blend_mix, depth_draw_always, world_vertex_coords;
 
 uniform float timeScale = 1.0;
 
+uniform sampler2D depth_texture : source_color, hint_depth_texture;
+
 uniform sampler2D simulation_texture;
+uniform float simulation_a = 0.0;
 
 uniform sampler2D tx;
 uniform vec4 colorTint : source_color;
@@ -32,14 +35,19 @@ uniform float depthAlphaFix = 0.9;
 
 uniform float gameTime = 0.0;
 
-uniform vec4 waveA = vec4(1.0, 0.5, .5, 10); //dir.x, dir.y, steepness, wave length
-uniform vec4 waveB = vec4(-0.7, 0.1, .25, 4); //dir.x, dir.y, steepness, wave length
-uniform vec4 waveC = vec4(-1.0, 0.1, .15, 10); //dir.x, dir.y, steepness, wave length
+uniform vec4 waveA = vec4(0.245, 0.5, .5, 22); //dir.x, dir.y, steepness, wave length
+uniform vec4 waveB = vec4(-0.275, 0.1, .25, 20); //dir.x, dir.y, steepness, wave length
+uniform vec4 waveC = vec4(0.17, 0.1, .15, 50); //dir.x, dir.y, steepness, wave length
 
-vec3 simulate_water(vec2 uv){
-	float r = texture(simulation_texture, uv).r;
+uniform vec4 fragment_waveA = vec4(0.245, 0.5, .5, 22); //dir.x, dir.y, steepness, wave length
+uniform vec4 fragment_waveB = vec4(-0.275, 0.1, .25, 20); //dir.x, dir.y, steepness, wave length
+uniform vec4 fragment_waveC = vec4(0.17, 0.1, .15, 50); //dir.x, dir.y, steepness, wave length
+
+vec3 simulate_water(vec2 uv, vec3 normal){
+	vec3 water_sim = texture(simulation_texture, uv).rgb;
+	water_sim = vec3(water_sim.r *= .5) * normal;
 	
-	return vec3(r, 0.0, 0.0);
+	return water_sim;
 }
 
 float linearize(float cDepth){
@@ -76,66 +84,52 @@ vec3 GerstnerWave(vec4 wave, vec3 pos, out vec3 tangent, out vec3 binormal){
 }
 
 varying float height;
+varying float fragment_height;
 void vertex(){
-	vec3 tangent = vec3(1, 0, 0);
-	vec3 binormal = vec3(0, 0, 1);
+	vec3 tangent = vec3(0.0);
+	vec3 binormal = vec3(0.0);
 	
+	vec3 vert = VERTEX;
+	vert += GerstnerWave(fragment_waveA, vert, tangent, binormal);
+	vert += GerstnerWave(fragment_waveB, vert, tangent, binormal);
+	vert += GerstnerWave(fragment_waveC, vert, tangent, binormal);
+	fragment_height = vert.y;
+	
+	tangent = vec3(0.0);
+	binormal = vec3(0.0);
 	VERTEX += GerstnerWave(waveA, VERTEX, tangent, binormal);
 	VERTEX += GerstnerWave(waveB, VERTEX, tangent, binormal);
 	VERTEX += GerstnerWave(waveC, VERTEX, tangent, binormal);
-	height = VERTEX.y;
 	
-//	
+	height = VERTEX.y;
 }
 
 void fragment(){
-	
-	ALBEDO = simulate_water(UV);
-//	ALPHA = 1.0;
-//	vec2 baseUVoffset = UV*uvOffsetScale;
-//	baseUVoffset += gameTime*uvOffsetTimeScale*0.01;
-//	vec2 txBasedOffset = texture(uvOffsetTx, baseUVoffset*txSize).rg*.01;
-//	txBasedOffset = txBasedOffset*2.0-1.0;
-//	vec2 txUV = UV*txSize;
-//	txUV += uvOffsetA * txBasedOffset * (.03*sin(gameTime*.8)+0.5);
-//
-//	ALBEDO = texture(tx, txUV*txSize).rgb;
-//	ALBEDO = vec3(ALBEDO.r + ALBEDO.g + ALBEDO.b) / 3.0;
-//	ALBEDO *= colorTint.rgb*colorTint.a;
-//	ALBEDO *= vec3(smoothstep(6.0, height, 0.25));
-	
-//	NORMAL_MAP = texture(normalTx, txUV*uvNormalOffsetScale).rgb;
-//	NORMAL_MAP *= vec3(NORMAL_MAP.r + NORMAL_MAP.g + NORMAL_MAP.b)*0.8;
-//	METALLIC = 0.2;
-//	ROUGHNESS = 0.95;
-//	vec3 refNormal = normalize(mix(NORMAL, TANGENT * NORMAL_MAP.x + BINORMAL * NORMAL_MAP.y + NORMAL * NORMAL_MAP.z, DEPTH));
-//	vec2 refOvs = SCREEN_UV - refNormal.xy*1.2;
-//
-//	float zDepth = linearize(NORMAL_MAP_DEPTH);
-//	float zPos = linearize(FRAGCOORD.z);
-//	float diff = zDepth-zPos;
-//
-//	//darkening on edges
-//	vec2 disp = texture(normalTx, 5.0*sin((UV*foamSize*64.0)-gameTime/100.0)).rg;
-//	disp = ((disp*2.0)-1.0)*foamFlowStr;
-//	diff += disp.x;
-//	vec4 mixCol = mix(foamColor, vec4(ALBEDO.r, ALBEDO.g, ALBEDO.b, 0.0), step(0.1, diff));
-//	ALBEDO = mixCol.rgb;
-//	ALBEDO = mix(foamColor, vec4(ALBEDO.r, ALBEDO.g, ALBEDO.b, 0.0), .5).rgb;
-	
-//	disp = texture(normalTx, vec2(0.01)).rg;
-//	disp = ((disp*2.0)-1.0)*1.4;
-//	diff -= disp.x;
-//	mixCol = mix(vec4(1.0), vec4(ALBEDO.r, ALBEDO.g, ALBEDO.b, 0.0), step(.01, diff));
-//	ALBEDO = mixCol.rgb;
-
 	//depth buffer
-//	float depth = texture(DEPTH_TEXTURE, SCREEN_UV).r;
-//	depth = depth*2.0-1.0;
-//	depth = PROJECTION_MATRIX[3][2]/(depth+PROJECTION_MATRIX[2][2]);
-//	depth = depth + VERTEX.z;
-//	depth *= 0.04;
-//	depth = clamp(depth, 0, alphaClamp);
-//
-//	ALPHA = depth+depthAlphaFix;
+	float depth = texture(depth_texture, SCREEN_UV).r;
+	depth = PROJECTION_MATRIX[3][2]/(depth+PROJECTION_MATRIX[2][2]);
+	depth = depth + VERTEX.z;
+	float albedo_depth = clamp(exp(-depth * 5.2), 0.0, 1.0);
+	float alpha_depth = exp(-depth * 2.0);
+	vec3 color = vec3(1.0-albedo_depth) * colorTint.rgb;
+	ALPHA = 1.0 - alpha_depth;
+	vec3 depth_color = (height*.1 + 0.9)*color;
+	
+	vec2 baseUVoffset = UV*uvOffsetScale;
+	baseUVoffset += sin(TIME*0.0001);
+	vec3 txBasedOffset = texture(uvOffsetTx, baseUVoffset*txSize*5.0 + 1.5*sin(TIME*.005)).rgb;
+	
+	float foam_anim_offset = 0.01*sin(TIME);
+	
+	vec2 waves_uv = UV*txSize*.001;
+	waves_uv += txBasedOffset.rg*.6;
+	vec3 waves_color = texture(tx, waves_uv).rgb;
+	waves_color = vec3(waves_color.r + waves_color.g + waves_color.b) / 3.0;
+	waves_color = (waves_color.r > 0.8+foam_anim_offset && waves_color.r < 0.9+foam_anim_offset ||
+	waves_color.r > 0.48+foam_anim_offset && waves_color.r < 0.75+foam_anim_offset ||
+	waves_color.r > 0.0+foam_anim_offset && waves_color.r < 0.45+foam_anim_offset) ? vec3(1.0) : vec3(0.0);
+	ROUGHNESS = 0.1*txBasedOffset.r*waves_color.r;
+	waves_color *= -0.05;
+	
+	ALBEDO = depth_color*clamp(1.0-fragment_height, 0.5, 1.0) + waves_color;
 }

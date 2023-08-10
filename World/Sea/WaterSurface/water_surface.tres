@@ -31,19 +31,12 @@ void fragment() {
 	float n_out3p1 = n_out3p0.r;
 
 
-// VectorCompose:5
-	float n_in5p1 = 0.00000;
-	float n_in5p2 = 0.00000;
-	vec3 n_out5p0 = vec3(n_out3p1, n_in5p1, n_in5p2);
-
-
 // Output:0
-	ALBEDO = n_out5p0;
+	ALBEDO = vec3(n_out3p0.xyz);
 
 
 }
 "
-graph_offset = Vector2(-466, 47)
 nodes/fragment/0/position = Vector2(620, 160)
 nodes/fragment/2/node = SubResource("VisualShaderNodeInput_ix7gx")
 nodes/fragment/2/position = Vector2(-360, 180)
@@ -52,5 +45,5 @@ nodes/fragment/3/position = Vector2(20, 280)
 nodes/fragment/4/node = SubResource("VisualShaderNodeTexture2DParameter_alwel")
 nodes/fragment/4/position = Vector2(-380, 400)
 nodes/fragment/5/node = SubResource("VisualShaderNodeVectorCompose_segd2")
-nodes/fragment/5/position = Vector2(320, 280)
-nodes/fragment/connections = PackedInt32Array(2, 0, 3, 0, 4, 0, 3, 2, 3, 1, 5, 0, 5, 0, 0, 0)
+nodes/fragment/5/position = Vector2(320, 500)
+nodes/fragment/connections = PackedInt32Array(2, 0, 3, 0, 4, 0, 3, 2, 3, 1, 5, 0, 3, 0, 0, 0)
